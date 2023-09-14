@@ -9,9 +9,7 @@ export class ForDirective implements OnInit {
 
   constructor(
     private container: ViewContainerRef,
-    private template: TemplateRef<any>) { 
-    
-    }
+    private template: TemplateRef<any>) {  }
 
   ngOnInit(): void {
     for (let number of this.numbers) {
