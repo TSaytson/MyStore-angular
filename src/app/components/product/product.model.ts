@@ -3,3 +3,8 @@ export interface Product {
   name: string,
   price: number | null
 }
+
+export interface ProductDTO{
+  name: string,
+  price: number | null
+}

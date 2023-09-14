@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Product } from '../product.model';
+import { ProductDTO } from '../product.model';
 import { ProductService } from '../product.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { ProductService } from '../product.service';
 })
 export class ProductCreateComponent {
 
-  product: Product = {
+  product: ProductDTO = {
     name: '',
     price: null
   }
@@ -20,9 +20,11 @@ export class ProductCreateComponent {
   
   createProduct(): void {
     this.productService.create(this.product).subscribe(() => {
-      this.productService.showMessage('Product successfully registered')
+      this.productService.showMessage(
+        `${this.product.name} successfully registered`
+      );
       this.router.navigate(['/products'])
-    });
+    })
   }
   cancel(): void {
     this.router.navigate(['/products'])

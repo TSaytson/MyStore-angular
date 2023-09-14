@@ -1,0 +1,12 @@
+a .edit{
+  margin-right: 10px;
+}
+
+i.edit{
+  color: rgb(141, 132, 236);
+}
+
+i.delete{
+  cursor: pointer;
+  color: rgb(221, 20, 20);
+}
