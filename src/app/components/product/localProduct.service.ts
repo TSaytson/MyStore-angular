@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Product, ProductDTO } from './product.model';
-import { provideProtractorTestingSupport } from '@angular/platform-browser';
+import { LocalStorageService } from 'src/app/helpers/local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +9,8 @@ import { provideProtractorTestingSupport } from '@angular/platform-browser';
 
 export class LocalProductService {
 
-  private storage: Storage;
-
-  constructor(private snackBar: MatSnackBar) {
-    this.storage = window.localStorage;
-  }
+  constructor(private snackBar: MatSnackBar,
+    private storage: LocalStorageService) { }
 
   showMessage(message: string, isError: boolean = false): void {
     this.snackBar.open(message, 'Ok', {
@@ -31,9 +28,8 @@ export class LocalProductService {
   }
 
   seed() {
-    let products: Product[] = JSON.parse(this.storage.getItem('products')!);
+    let products: Product[] = this.storage.get('products');
     if (!products) {
-      console.log('ertoy no if');
       products = [{
         id: 1,
         name: 'Macbook Pro',
@@ -48,7 +44,7 @@ export class LocalProductService {
         name: 'Caneta BIC',
         price: 3.50
       }];
-      this.storage.setItem('products', JSON.stringify(products));
+      this.storage.set('products', products);
       return true;
     }
     return false;
@@ -59,29 +55,35 @@ export class LocalProductService {
       this.showMessage(`Every field is required`, true);
       return false;
     }
-    const products: Product[] = JSON.parse(this.storage.getItem('products')!);
-    const fullProduct = { ...product, id: products.length + 1 };
+    const products: Product[] = this.storage.get('products');
+    const fullProduct = { id: products.length + 1, ...product };
     products.push(fullProduct);
-    this.storage.setItem('products', JSON.stringify(products));
+    this.storage.set('products', products);
     return true;
   }
 
   read(): Product[] {
     if (!this.seed())
-      return JSON.parse(this.storage.getItem('products')!);
+      return this.storage.get('products');
     this.errorHandler(Error);
-    return JSON.parse(this.storage.getItem('products')!);
+    return this.storage.get('products');
   }
 
-  readyById(id: string) {
-
+  readById(id: number) {
+    const products: Product[] = this.storage.get('products');
+    return products[id - 1];
   }
 
   update(product: Product) {
-
+    const products: Product[] = this.storage.get('products');
+    products[product.id! - 1] = product;
+    this.storage.set('products', products);
   }
 
   delete(id: number) {
-
+    const products: Product[] = this.storage.get('products');
+    products.splice(id - 1, 1);
+    products.map((product, index) => product.id = index+1);
+    this.storage.set('products', products);
   }
 }

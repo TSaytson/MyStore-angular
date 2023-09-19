@@ -42,7 +42,7 @@ export class ProductService {
     );
   }
 
-  readyById(id: string): Observable<Product>{
+  readById(id: string): Observable<Product>{
     return this.http.get<Product>(`${this.baseUrl}/${id}`).pipe(
       map(object => object),
       catchError((error) => this.errorHandler(error))
